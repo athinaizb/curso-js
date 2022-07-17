@@ -9,7 +9,6 @@ class Producto {
     }
 }
 
-
 // esta funcion recibe el actual precio total, el precio del item seleccionado y la cantidad que quiere del mismo
 // chequea que sea un numero y si es asi le agrega al precio final el producto calculado
 function obtenerSubtotal(precioFinalActual, precio, cantidad) {
@@ -21,12 +20,29 @@ function obtenerSubtotal(precioFinalActual, precio, cantidad) {
     }
     return precioFinalActual;
 }
+const productos = [];
+
+
 
 const producto1 = new Producto("Brownie", "Brownie con nueces, cubierto por una capa de dulce de leche y una capa de merengue italiano", "2400");
 const producto2 = new Producto("Rogel", "Capas de masa philo, rellenas de dulce de leche y cubierta de merengue italiano", "2000");
 const producto3 = new Producto("Lime curd", "Base de brownie con una capa de mousse de chocolate con cereales y una cama de curd de limon", "2800");
+const producto4 = new Producto("Lemon pie", "Base de tarta con relleno de curd de limon y merengue italiano", "2200");
 
-const misProductos = producto1.mostrar() + producto2.mostrar() + producto3.mostrar();
+// agrega los productos al array "productos" mediante el metodo push 
+productos.push(producto1);
+productos.push(producto2);
+productos.push(producto3);
+productos.push(producto4);
+
+// se recorre el array de "productos" para poder listar la totalidad de los mismos haciendo uso de la funcion "mostrar" de la clase Producto 
+function obtenerProductos() {
+    let misProductos = "";
+    for (const producto of productos) {
+        misProductos = misProductos + producto.mostrar();
+    }
+    return misProductos;
+}
 
 // dentro del do while, vamos a mostrar los productos que tenemos 
 // el usuario va a elegir cual quiere
@@ -39,7 +55,7 @@ let precio = 0;
 let precioFinal = 0;
 
 do {
-    input = prompt(misProductos).toLowerCase();
+    input = prompt(obtenerProductos()).toLowerCase();
     switch (input) {
         case "brownie":
             precio = producto1.precio;
@@ -49,6 +65,9 @@ do {
             break;
         case "lime curd":
             precio = producto3.precio;
+            break;
+        case "lemon pie":
+            precio = producto4.precio;
             break;
         default: precio = 0;
     }
