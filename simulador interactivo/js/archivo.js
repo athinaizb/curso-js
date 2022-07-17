@@ -53,6 +53,7 @@ function obtenerProductos() {
 let input = "";
 let precio = 0;
 let precioFinal = 0;
+let precioConDescuento = 0;
 
 do {
     input = prompt(obtenerProductos()).toLowerCase();
@@ -83,5 +84,16 @@ do {
 
 } while (input !== "salir");
 
-alert("El total de tu compra es de $" + precioFinal);
+// en caso de que la compra supere los 4500 pesos, se le realizara un descuento del 10% al precio final
+if (precioFinal >= 4500) {
+
+    precioConDescuento = precioFinal * 0.9;
+    alert("El total de tu compra era de " + precioFinal + "\n y con el descuento del 10% te queda en " + precioConDescuento);
+} else {
+    alert("El total de tu compra es de $" + precioFinal);
+
+}
+
+
+
 
