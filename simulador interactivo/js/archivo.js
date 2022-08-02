@@ -9,16 +9,13 @@ class Producto {
     }
 }
 
-// esta funcion recibe el actual precio total, el precio del item seleccionado y la cantidad que quiere del mismo
-// chequea que sea un numero y si es asi le agrega al precio final el producto calculado
-function obtenerSubtotal(precioFinalActual, precio, cantidad) {
-    if (isNaN(cantidad)) {
-        alert("No ingresaste un numero");
-    }
-    else {
-        precioFinalActual = precioFinalActual + (precio * cantidad);
-    }
-    return precioFinalActual;
+function obtenerSubtotal(array) {
+    let precioSubtotal = 0;
+    array.forEach(producto => {
+        precioSubtotal = precioSubtotal + Number(producto.precio);
+    });
+    return precioSubtotal;
+
 }
 const productos = [];
 
@@ -44,6 +41,14 @@ function obtenerProductos() {
     return misProductos;
 }
 
+
+function agregarProductos(array, producto, cantidad) {
+    for (let i = 0; i < cantidad; i++) {
+        array.push(producto);
+    }
+    return array;
+}
+
 // dentro del do while, vamos a mostrar los productos que tenemos 
 // el usuario va a elegir cual quiere
 // le vamos a preguntar cuantos quiere de lo que eligio
@@ -53,22 +58,28 @@ function obtenerProductos() {
 let input = "";
 let precio = 0;
 let precioFinal = 0;
-let precioConDescuento = 0;
+let precioConDescuento = false;
+let productoSeleccionado;
+let productosSeleccionados = [];
 
 do {
     input = prompt(obtenerProductos()).toLowerCase();
     switch (input) {
         case "brownie":
             precio = producto1.precio;
+            productoSeleccionado = producto1;
             break;
         case "rogel":
             precio = producto2.precio;
+            productoSeleccionado = producto2;
             break;
         case "lime curd":
             precio = producto3.precio;
+            productoSeleccionado = producto3;
             break;
         case "lemon pie":
             precio = producto4.precio;
+            productoSeleccionado = producto4;
             break;
         default: precio = 0;
     }
@@ -79,21 +90,49 @@ do {
     }
     else if (input != "salir") {
         cantidad = parseInt(prompt("Seleccionar cantidad"));
-        precioFinal = obtenerSubtotal(precioFinal, precio, cantidad);
+        if (isNaN(cantidad)) {
+            alert("No ingresaste un numero");
+        }
+        else {
+            productosSeleccionados = agregarProductos(productosSeleccionados, productoSeleccionado, cantidad);
+            precioFinal = obtenerSubtotal(productosSeleccionados);
+        }
+
     }
 
 } while (input !== "salir");
 
 // en caso de que la compra supere los 4500 pesos, se le realizara un descuento del 10% al precio final
 if (precioFinal >= 4500) {
-
-    precioConDescuento = precioFinal * 0.9;
-    alert("El total de tu compra era de " + precioFinal + "\n y con el descuento del 10% te queda en " + precioConDescuento);
-} else {
-    alert("El total de tu compra es de $" + precioFinal);
-
+    precioFinal = precioFinal * 0.9;
+    precioConDescuento = true;
 }
 
+
+let parrafoProductos = document.createElement("div");
+parrafoProductos.innerHTML = "<h2>Estos son los productos seleccionados</h2>";
+document.body.append(parrafoProductos);
+// document.body.append(productosSeleccionados[0].nombre);
+
+let lista = document.createElement("ol");
+document.body.append(lista);
+productosSeleccionados.forEach(producto => {
+    let product = document.createElement("li");
+    product.innerHTML = producto.nombre + " $" + producto.precio;
+    document.body.append(product);
+});
+
+
+let valorTotal = document.createElement("h3");
+valorTotal.innerHTML = "$" + precioFinal;
+document.body.append(valorTotal);
+
+
+if (precioConDescuento) {
+    let labelDescuento = document.createElement("h4");
+    labelDescuento.innerHTML = "El valor final tiene un 10% de descuento ya que superó los $4500";
+    document.body.append(labelDescuento);
+}
 
 
 
