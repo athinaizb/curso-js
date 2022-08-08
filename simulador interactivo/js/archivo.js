@@ -9,8 +9,10 @@ class Producto {
     }
 }
 
-function obtenerSubtotal(array) {
+function obtenerSubtotal() {
     let precioSubtotal = 0;
+    let carritoJson = localStorage.getItem("carrito");
+    let array = JSON.parse(carritoJson);
     array.forEach(producto => {
         precioSubtotal = precioSubtotal + Number(producto.precio);
     });
@@ -18,7 +20,7 @@ function obtenerSubtotal(array) {
 
 }
 const productos = [];
-
+localStorage.removeItem("carrito");
 
 
 const producto1 = new Producto("Brownie", "Brownie con nueces, cubierto por una capa de dulce de leche y una capa de merengue italiano", "2400");
@@ -42,11 +44,18 @@ function obtenerProductos() {
 }
 
 
-function agregarProductos(array, producto, cantidad) {
+function agregarProductos(producto, cantidad) {
+
+    let arrayCarritoJson = localStorage.getItem("carrito");
+    let arrayCarrito = JSON.parse(arrayCarritoJson) || [];
+
     for (let i = 0; i < cantidad; i++) {
-        array.push(producto);
+        arrayCarrito.push(producto);
     }
-    return array;
+
+    arrayCarritoJson = JSON.stringify(arrayCarrito);
+    localStorage.setItem("carrito", arrayCarritoJson);
+
 }
 
 // dentro del do while, vamos a mostrar los productos que tenemos 
@@ -94,8 +103,8 @@ do {
             alert("No ingresaste un numero");
         }
         else {
-            productosSeleccionados = agregarProductos(productosSeleccionados, productoSeleccionado, cantidad);
-            precioFinal = obtenerSubtotal(productosSeleccionados);
+            agregarProductos(productoSeleccionado, cantidad);
+            precioFinal = obtenerSubtotal();
         }
 
     }
@@ -116,7 +125,9 @@ document.body.append(parrafoProductos);
 
 let lista = document.createElement("ol");
 document.body.append(lista);
-productosSeleccionados.forEach(producto => {
+let carritoJson = localStorage.getItem("carrito");
+let carrito = JSON.parse(carritoJson);
+carrito.forEach(producto => {
     let product = document.createElement("li");
     product.innerHTML = producto.nombre + " $" + producto.precio;
     document.body.append(product);
