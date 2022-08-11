@@ -62,8 +62,7 @@ function agregarProductos(producto, cantidad) {
 // el usuario va a elegir cual quiere
 // le vamos a preguntar cuantos quiere de lo que eligio
 // hasta que el quiera salir
-// le vamos a mostrar el valor total de su compra
-
+// le vamos a mostrar el valor total de su compr
 let input = "";
 let precio = 0;
 let precioFinal = 0;
@@ -112,7 +111,7 @@ do {
 } while (input !== "salir");
 
 // en caso de que la compra supere los 4500 pesos, se le realizara un descuento del 10% al precio final
-if (precioFinal >= 4500) {
+if (Number(precioFinal) && precioFinal >= 4500) {
     precioFinal = precioFinal * 0.9;
     precioConDescuento = true;
 }
