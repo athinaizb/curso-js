@@ -20,8 +20,6 @@ function obtenerSubtotal() {
 
 }
 const productos = [];
-localStorage.removeItem("carrito");
-
 
 const producto1 = new Producto("Brownie", "Brownie con nueces, cubierto por una capa de dulce de leche y una capa de merengue italiano", "2400");
 const producto2 = new Producto("Rogel", "Capas de masa philo, rellenas de dulce de leche y cubierta de merengue italiano", "2000");
@@ -43,26 +41,17 @@ function obtenerProductos() {
     return misProductos;
 }
 
-
-function agregarProductos(producto, cantidad) {
+function agregarProductos(producto) {
 
     let arrayCarritoJson = localStorage.getItem("carrito");
     let arrayCarrito = JSON.parse(arrayCarritoJson) || [];
-
-    for (let i = 0; i < cantidad; i++) {
-        arrayCarrito.push(producto);
-    }
-
+    arrayCarrito.push(producto);
     arrayCarritoJson = JSON.stringify(arrayCarrito);
     localStorage.setItem("carrito", arrayCarritoJson);
-
+    precioFinal = obtenerSubtotal();
+    imprimirProductosSeleccionados();
 }
 
-// dentro del do while, vamos a mostrar los productos que tenemos 
-// el usuario va a elegir cual quiere
-// le vamos a preguntar cuantos quiere de lo que eligio
-// hasta que el quiera salir
-// le vamos a mostrar el valor total de su compr
 let input = "";
 let precio = 0;
 let precioFinal = 0;
@@ -70,79 +59,80 @@ let precioConDescuento = false;
 let productoSeleccionado;
 let productosSeleccionados = [];
 
-do {
-    input = prompt(obtenerProductos()).toLowerCase();
-    switch (input) {
-        case "brownie":
-            precio = producto1.precio;
-            productoSeleccionado = producto1;
-            break;
-        case "rogel":
-            precio = producto2.precio;
-            productoSeleccionado = producto2;
-            break;
-        case "lime curd":
-            precio = producto3.precio;
-            productoSeleccionado = producto3;
-            break;
-        case "lemon pie":
-            precio = producto4.precio;
-            productoSeleccionado = producto4;
-            break;
-        default: precio = 0;
-    }
 
-    let cantidad = 0;
-    if (precio == 0 && input != "salir") {
-        alert("No se encontro ese producto");
-    }
-    else if (input != "salir") {
-        cantidad = parseInt(prompt("Seleccionar cantidad"));
-        if (isNaN(cantidad)) {
-            alert("No ingresaste un numero");
-        }
-        else {
-            agregarProductos(productoSeleccionado, cantidad);
-            precioFinal = obtenerSubtotal();
-        }
+function dibujarProductos(productos) {
+    productos.forEach(producto => {
+        let card = document.createElement("div");
+        card.classList.add('div-card');
+        let nombre = document.createElement("h3");
+        nombre.innerHTML = "<h3>" + producto.nombre + "</h3>";
+        let valor = document.createElement("h3");
+        valor.innerHTML = "<h3>" + producto.precio + "</h3>";
+        let button = document.createElement("button");
+        button.innerHTML = "agregar";
+        button.onclick = function () {
+            agregarProductos(producto);
+        };
 
-    }
-
-} while (input !== "salir");
-
-// en caso de que la compra supere los 4500 pesos, se le realizara un descuento del 10% al precio final
-if (Number(precioFinal) && precioFinal >= 4500) {
-    precioFinal = precioFinal * 0.9;
-    precioConDescuento = true;
+        card.append(nombre);
+        card.append(valor);
+        card.append(button);
+        document.body.append(card);
+    });
 }
 
-
-let parrafoProductos = document.createElement("div");
-parrafoProductos.innerHTML = "<h2>Estos son los productos seleccionados</h2>";
-document.body.append(parrafoProductos);
-// document.body.append(productosSeleccionados[0].nombre);
-
-let lista = document.createElement("ol");
-document.body.append(lista);
-let carritoJson = localStorage.getItem("carrito");
-let carrito = JSON.parse(carritoJson);
-carrito.forEach(producto => {
-    let product = document.createElement("li");
-    product.innerHTML = producto.nombre + " $" + producto.precio;
-    document.body.append(product);
-});
+dibujarProductos(productos);
+imprimirProductosSeleccionados();
 
 
-let valorTotal = document.createElement("h3");
-valorTotal.innerHTML = "$" + precioFinal;
-document.body.append(valorTotal);
+function imprimirProductosSeleccionados() {
+    //si ya existe lo elimina, buscandolo por id
+    let elem = document.getElementById("Div1");
+    elem?.parentNode.removeChild(elem);
+    //
+    let parrafoProductos = document.createElement("div");
+    parrafoProductos.innerHTML = "<h2>Estos son los productos seleccionados</h2>";
+    document.body.append(parrafoProductos);
+    //le agrega el id
+    parrafoProductos.setAttribute("id", "Div1")
 
+    let lista = document.createElement("ol");
+    document.body.append(lista);
+    let carritoJson = localStorage.getItem("carrito");
+    let carrito = JSON.parse(carritoJson);
 
-if (precioConDescuento) {
-    let labelDescuento = document.createElement("h4");
-    labelDescuento.innerHTML = "El valor final tiene un 10% de descuento ya que superó los $4500";
-    document.body.append(labelDescuento);
+    if (carrito) {
+        carrito.forEach(producto => {
+            let product = document.createElement("li");
+            product.innerHTML = producto.nombre + " $" + producto.precio;
+            parrafoProductos.append(product);
+        });
+        let buttonClear = document.createElement("button");
+        buttonClear.innerHTML = "limpiar carrito";
+        buttonClear.onclick = function () {
+            localStorage.removeItem("carrito");
+            imprimirProductosSeleccionados();
+        };
+        parrafoProductos.append(buttonClear);
+    }
+
+    precioFinal = obtenerSubtotal();
+    let valorTotal = document.createElement("h3");
+    valorTotal.innerHTML = "$" + precioFinal;
+    parrafoProductos.append(valorTotal);
+    calcularDescuento(parrafoProductos);
+
 }
 
-
-
+function calcularDescuento(parrafoProductos) {
+    precioConDescuento = false;
+    if (Number(precioFinal) && precioFinal >= 4500) {
+        precioFinal = precioFinal * 0.9;
+        precioConDescuento = true;
+    }
+    if (precioConDescuento) {
+        let labelDescuento = document.createElement("h4");
+        labelDescuento.innerHTML = "El valor final tiene un 10% de descuento ya que superó los $4500";
+        parrafoProductos.append(labelDescuento);
+    }
+}
