@@ -1,8 +1,9 @@
 class Producto {
-    constructor(nombre, descripcion, precio) {
+    constructor(nombre, descripcion, precio,foto) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
+        this.foto = foto;
     }
     mostrar() {
         return this.nombre + ":\n" + this.descripcion + " $" + this.precio + "\n";
@@ -12,19 +13,18 @@ class Producto {
 function obtenerSubtotal() {
     let precioSubtotal = 0;
     let carritoJson = localStorage.getItem("carrito");
-    let array = JSON.parse(carritoJson);
+    let array = JSON.parse(carritoJson) ?? [];
     array.forEach(producto => {
         precioSubtotal = precioSubtotal + Number(producto.precio);
     });
     return precioSubtotal;
-
 }
 const productos = [];
 
-const producto1 = new Producto("Brownie", "Brownie con nueces, cubierto por una capa de dulce de leche y una capa de merengue italiano", "2400");
-const producto2 = new Producto("Rogel", "Capas de masa philo, rellenas de dulce de leche y cubierta de merengue italiano", "2000");
-const producto3 = new Producto("Lime curd", "Base de brownie con una capa de mousse de chocolate con cereales y una cama de curd de limon", "2800");
-const producto4 = new Producto("Lemon pie", "Base de tarta con relleno de curd de limon y merengue italiano", "2200");
+const producto1 = new Producto("Brownie", "Brownie con nueces, cubierto por una capa de dulce de leche y una capa de merengue italiano", "2400", 'imagenes/brownie.jfif');
+const producto2 = new Producto("Rogel", "Capas de masa philo, rellenas de dulce de leche y cubierta de merengue italiano", "2000",'imagenes/rogel.jfif');
+const producto3 = new Producto("Lime curd", "Base de brownie con una capa de mousse de chocolate con cereales y una cama de curd de limon", "2800",'imagenes/lime-curd.jfif');
+const producto4 = new Producto("Lemon pie", "Base de tarta con relleno de curd de limon y merengue italiano", "2200",'imagenes/lemon-pie.jfif');
 
 // agrega los productos al array "productos" mediante el metodo push 
 productos.push(producto1);
@@ -61,6 +61,8 @@ let productosSeleccionados = [];
 
 
 function dibujarProductos(productos) {
+    let contenedor = document.createElement("div");
+    contenedor.classList.add('contenedor-productos');
     productos.forEach(producto => {
         let card = document.createElement("div");
         card.classList.add('div-card');
@@ -72,13 +74,28 @@ function dibujarProductos(productos) {
         button.innerHTML = "agregar";
         button.onclick = function () {
             agregarProductos(producto);
+            Toastify({
+                text: "Se agrego correctamente al carrito",
+                className: "info",
+                position: 'center',
+                gravity: 'bottom',
+                style: {
+                  background: "green",
+                }
+              }).showToast();
         };
+        let imagen = document.createElement("img");
+        imagen.setAttribute('src', producto.foto);
+        imagen.setAttribute('height',150);
+        imagen.setAttribute('width',150);
 
         card.append(nombre);
         card.append(valor);
         card.append(button);
-        document.body.append(card);
+        card.append(imagen);
+        contenedor.append(card);
     });
+    document.body.append(contenedor);
 }
 
 dibujarProductos(productos);
@@ -112,15 +129,25 @@ function imprimirProductosSeleccionados() {
         buttonClear.onclick = function () {
             localStorage.removeItem("carrito");
             imprimirProductosSeleccionados();
+            Toastify({
+                text: "Se limpio el carrito",
+                className: "info",
+                position: 'center',
+                gravity: 'bottom',
+                style: {
+                  background: "red",
+                }
+              }).showToast();
+            
         };
         parrafoProductos.append(buttonClear);
     }
 
     precioFinal = obtenerSubtotal();
+    calcularDescuento(parrafoProductos);
     let valorTotal = document.createElement("h3");
     valorTotal.innerHTML = "$" + precioFinal;
     parrafoProductos.append(valorTotal);
-    calcularDescuento(parrafoProductos);
 
 }
 
