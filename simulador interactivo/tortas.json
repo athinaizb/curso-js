@@ -1,0 +1,26 @@
+[
+    {
+        "nombre": "Brownie",
+        "descripcion": "Brownie con nueces, cubierto por una capa de dulce de leche y una capa de merengue italiano",
+        "precio": "2400",
+        "foto": "imagenes/brownie.jfif"
+    },
+    {
+        "nombre": "Rogel",
+        "descripcion": "Capas de masa philo, rellenas de dulce de leche y cubierta de merengue italiano",
+        "precio": "2000",
+        "foto": "imagenes/rogel.jfif"
+    },
+    {
+        "nombre": "Lime curd",
+        "descripcion": "Base de brownie con una capa de mousse de chocolate con cereales y una cama de curd de limon",
+        "precio": "2800",
+        "foto": "imagenes/lime-curd.jfif"
+    },
+    {
+        "nombre": "Lemon pie",
+        "descripcion": "Base de tarta con relleno de curd de limon y merengue italiano",
+        "precio": "2200",
+        "foto": "imagenes/lemon-pie.jfif"
+    }
+]

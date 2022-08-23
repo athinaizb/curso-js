@@ -1,5 +1,5 @@
 class Producto {
-    constructor(nombre, descripcion, precio,foto) {
+    constructor(nombre, descripcion, precio, foto) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
@@ -21,24 +21,18 @@ function obtenerSubtotal() {
 }
 const productos = [];
 
-const producto1 = new Producto("Brownie", "Brownie con nueces, cubierto por una capa de dulce de leche y una capa de merengue italiano", "2400", 'imagenes/brownie.jfif');
-const producto2 = new Producto("Rogel", "Capas de masa philo, rellenas de dulce de leche y cubierta de merengue italiano", "2000",'imagenes/rogel.jfif');
-const producto3 = new Producto("Lime curd", "Base de brownie con una capa de mousse de chocolate con cereales y una cama de curd de limon", "2800",'imagenes/lime-curd.jfif');
-const producto4 = new Producto("Lemon pie", "Base de tarta con relleno de curd de limon y merengue italiano", "2200",'imagenes/lemon-pie.jfif');
 
-// agrega los productos al array "productos" mediante el metodo push 
-productos.push(producto1);
-productos.push(producto2);
-productos.push(producto3);
-productos.push(producto4);
+const pedirApi = async () => {
+    //se llama al archivo Json para consumir su info
+    const resp = await fetch("/tortas.json")
+    const data = await resp.json()
+    console.log(data);
 
-// se recorre el array de "productos" para poder listar la totalidad de los mismos haciendo uso de la funcion "mostrar" de la clase Producto 
-function obtenerProductos() {
-    let misProductos = "";
-    for (const producto of productos) {
-        misProductos = misProductos + producto.mostrar();
-    }
-    return misProductos;
+    data.forEach(producto => {
+        const nuevoProducto = new Producto(producto.nombre, producto.descripcion, producto.precio, producto.foto);
+        productos.push(nuevoProducto);
+
+    });
 }
 
 function agregarProductos(producto) {
@@ -60,7 +54,9 @@ let productoSeleccionado;
 let productosSeleccionados = [];
 
 
-function dibujarProductos(productos) {
+async function dibujarProductos(productos) {
+    await pedirApi();
+    console.log("entro dibujar productos", productos);
     let contenedor = document.createElement("div");
     contenedor.classList.add('contenedor-productos');
     productos.forEach(producto => {
@@ -80,14 +76,14 @@ function dibujarProductos(productos) {
                 position: 'center',
                 gravity: 'bottom',
                 style: {
-                  background: "green",
+                    background: "green",
                 }
-              }).showToast();
+            }).showToast();
         };
         let imagen = document.createElement("img");
         imagen.setAttribute('src', producto.foto);
-        imagen.setAttribute('height',150);
-        imagen.setAttribute('width',150);
+        imagen.setAttribute('height', 150);
+        imagen.setAttribute('width', 150);
 
         card.append(nombre);
         card.append(valor);
@@ -135,10 +131,10 @@ function imprimirProductosSeleccionados() {
                 position: 'center',
                 gravity: 'bottom',
                 style: {
-                  background: "red",
+                    background: "red",
                 }
-              }).showToast();
-            
+            }).showToast();
+
         };
         parrafoProductos.append(buttonClear);
     }
