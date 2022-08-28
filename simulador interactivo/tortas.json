@@ -1,8 +1,8 @@
 [
     {
-        "nombre": "Brownie",
+        "nombre": "Torta brownie",
         "descripcion": "Brownie con nueces, cubierto por una capa de dulce de leche y una capa de merengue italiano",
-        "precio": "2400",
+        "precio": "2500",
         "foto": "imagenes/brownie.jfif"
     },
     {
@@ -14,7 +14,7 @@
     {
         "nombre": "Lime curd",
         "descripcion": "Base de brownie con una capa de mousse de chocolate con cereales y una cama de curd de limon",
-        "precio": "2800",
+        "precio": "3000",
         "foto": "imagenes/lime-curd.jfif"
     },
     {
@@ -22,5 +22,29 @@
         "descripcion": "Base de tarta con relleno de curd de limon y merengue italiano",
         "precio": "2200",
         "foto": "imagenes/lemon-pie.jfif"
+    },
+    {
+        "nombre": "Torta espresso marquise y peras",
+        "descripcion": "Base de bizcocho de pera, marquise de café, gelee de amaretto y chips de peras",
+        "precio": "3200",
+        "foto": "imagenes/expressomarquise.jfif"
+    },
+    {
+        "nombre": "Cheesecake de chocolate",
+        "descripcion": "Cheesecake de chocolate con base de galletitas oreo y salsa de dulce de leche",
+        "precio": "2500",
+        "foto": "imagenes/cheesecake.jfif"
+    },
+    {
+        "nombre": "Tiramisu",
+        "descripcion": "Torta tiramisu",
+        "precio": "2600",
+        "foto": "imagenes/tiramisu.jfif"
+    },
+    {
+        "nombre": "New York banana split",
+        "descripcion": "Torta de banana con crema de dulce de leche y baño de chocolate",
+        "precio": "3000",
+        "foto": "imagenes/bananasplit.jfif"
     }
 ]

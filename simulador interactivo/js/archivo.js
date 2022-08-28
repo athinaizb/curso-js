@@ -24,9 +24,8 @@ const productos = [];
 
 const pedirApi = async () => {
     //se llama al archivo Json para consumir su info
-    const resp = await fetch("/tortas.json")
+    const resp = await fetch("./tortas.json")
     const data = await resp.json()
-    console.log(data);
 
     data.forEach(producto => {
         const nuevoProducto = new Producto(producto.nombre, producto.descripcion, producto.precio, producto.foto);
@@ -56,18 +55,20 @@ let productosSeleccionados = [];
 
 async function dibujarProductos(productos) {
     await pedirApi();
-    console.log("entro dibujar productos", productos);
     let contenedor = document.createElement("div");
     contenedor.classList.add('contenedor-productos');
     productos.forEach(producto => {
         let card = document.createElement("div");
         card.classList.add('div-card');
         let nombre = document.createElement("h3");
-        nombre.innerHTML = "<h3>" + producto.nombre + "</h3>";
+        nombre.innerHTML = producto.nombre;
+        nombre.classList.add("nombre-tortas");
         let valor = document.createElement("h3");
-        valor.innerHTML = "<h3>" + producto.precio + "</h3>";
+        valor.innerHTML = "$" + producto.precio;
+        valor.classList.add("precio-tortas");
         let button = document.createElement("button");
         button.innerHTML = "agregar";
+        button.classList.add("boton");
         button.onclick = function () {
             agregarProductos(producto);
             Toastify({
@@ -81,21 +82,44 @@ async function dibujarProductos(productos) {
             }).showToast();
         };
         let imagen = document.createElement("img");
+        imagen.classList.add("img-tortas");
         imagen.setAttribute('src', producto.foto);
-        imagen.setAttribute('height', 150);
-        imagen.setAttribute('width', 150);
+        imagen.setAttribute('height', 220);
+        imagen.setAttribute('width', 220);
 
+        card.append(imagen);
         card.append(nombre);
         card.append(valor);
         card.append(button);
-        card.append(imagen);
+
         contenedor.append(card);
     });
     document.body.append(contenedor);
 }
 
-dibujarProductos(productos);
-imprimirProductosSeleccionados();
+async function run() {
+    await dibujarProductos(productos);
+    imprimirProductosSeleccionados();
+    imprimirSelect();
+    imprimirFooter();
+}
+
+function imprimirSelect() {
+    var selectList = document.createElement("select");
+    selectList.id = "envios";
+    selectList.name = "envios";
+    var option = document.createElement("option");
+    option.value = "retiro";
+    option.text = "Retiro por el local";
+    var option2 = document.createElement("option");
+    option2.value = "delivery";
+    option2.text = "Delivery dentro de CABA";
+    selectList.appendChild(option);
+    selectList.appendChild(option2);
+    selectList.onchange = cambioEnvios;
+    document.body.append(selectList);
+}
+
 
 
 function imprimirProductosSeleccionados() {
@@ -104,7 +128,8 @@ function imprimirProductosSeleccionados() {
     elem?.parentNode.removeChild(elem);
     //
     let parrafoProductos = document.createElement("div");
-    parrafoProductos.innerHTML = "<h2>Estos son los productos seleccionados</h2>";
+    parrafoProductos.innerHTML = "<h3>Estos son los productos seleccionados:</h3>";
+    parrafoProductos.classList.add("parrafo-productos");
     document.body.append(parrafoProductos);
     //le agrega el id
     parrafoProductos.setAttribute("id", "Div1")
@@ -137,6 +162,7 @@ function imprimirProductosSeleccionados() {
 
         };
         parrafoProductos.append(buttonClear);
+        imprimirFooter();
     }
 
     precioFinal = obtenerSubtotal();
@@ -159,3 +185,27 @@ function calcularDescuento(parrafoProductos) {
         parrafoProductos.append(labelDescuento);
     }
 }
+
+function imprimirFooter() {
+    let elem = document.getElementById("footer");
+    elem?.parentNode.removeChild(elem);
+
+    let footer = document.createElement("div");
+    footer.innerHTML = "© Copyright - Athina pastelería - 2022";
+    footer.classList.add('footer');
+    footer.id = 'footer';
+    document.body.append(footer);
+}
+
+function cambioEnvios() {
+     let info = document.getElementById("metodo-envio");
+    if(!info){
+        info = document.createElement("h3");
+        info.id = "metodo-envio";
+    }
+    var valorSelect = document.getElementById("envios");
+    valorSelect.value == "retiro" ? info.innerHTML = "El punto de retiro es Larrea 743, de 9hs a 18hs" : info.innerHTML = "El delivery es a coordinar. El costo dentro de CABA es de $600";
+    document.body.append(info);
+    imprimirFooter();
+}
+run();
